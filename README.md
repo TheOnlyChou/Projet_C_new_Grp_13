@@ -17,7 +17,6 @@ Les probabilités sont réinitialisées au début de chaque phase pour garantir 
 Random Shuffle:
 
 Les mouvements sont mélangés pour assurer un tirage aléatoire, permettant une distribution équitable des choix.
-Vidéo explicative sur le mélange aléatoire.
 
 Diminuer les Probabilités:
 
