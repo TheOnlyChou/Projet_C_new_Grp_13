@@ -22,5 +22,24 @@ int main() {
         printf("\n");
     }
     displayMap(map);
+
+    t_move selected_moves[SEL_MOV];
+    
+    resetProbabilities();
+    
+    printf("Probabilités initiales :\n");
+    printProbabilities(move_probabilities, NUM_MOV);
+
+    chooseMoves(selected_moves);
+
+    printf("\nMouvements sélectionnés:\n");
+    for (int i = 0; i < SEL_MOV; i++) 
+    {
+        printf("Mouvement %d sélectionné\n", selected_moves[i]);
+    }
+
+    printf("\nProbabilités après sélection:\n");
+    printProbabilities(move_probabilities, NUM_MOV);
+    
     return 0;
 }
