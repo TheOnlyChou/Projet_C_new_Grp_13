@@ -51,6 +51,12 @@ void shuffle(t_move_probability *array, int n);
  */
 t_move selectMove();
 
+void chooseNineMoves(t_move selected_moves[9]);
+/**
+ * @brief Fonction pour choisir 9 mouvements parmie les 7 possibles (2 qui se répètent)
+ * @param selected_moves : tableau des mouvements sélectionnés (9)
+ */
+
 /**
  * @brief Fonction pour choisir les mouvements à effectuer
  * @param selected_moves : tableau des mouvements sélectionnés

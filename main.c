@@ -31,22 +31,34 @@ int main() {
     }
     displayMap(map);
 
+    // Initialiser les mouvements sélectionnés
     t_move selected_moves[SEL_MOV];
-    
+
+    // Réinitialiser les probabilités
     resetProbabilities();
-    
+
+    // Afficher les probabilités initiales
     printf("Probabilités initiales :\n");
     printProbabilities(move_probabilities, NUM_MOV);
 
+    // Choisir les mouvements
     chooseMoves(selected_moves);
 
+    // Afficher les mouvements sélectionnés
     printf("\nMouvements sélectionnés:\n");
-    for (int i = 0; i < SEL_MOV; i++) 
-    {
+    for (int i = 0; i < SEL_MOV; i++) {
         printf("Mouvement %d sélectionné\n", selected_moves[i]);
     }
 
+    // Afficher les probabilités après sélection
     printf("\nProbabilités après sélection:\n");
+    printProbabilities(move_probabilities, NUM_MOV);
+
+    // Appeler la fonction shuffle pour mélanger les probabilités
+    shuffle(move_probabilities, NUM_MOV);
+
+    // Afficher les probabilités après mélange
+    printf("\nProbabilités après mélange:\n");
     printProbabilities(move_probabilities, NUM_MOV);
     
     return 0;

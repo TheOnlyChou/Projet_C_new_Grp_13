@@ -45,13 +45,22 @@ t_move selectMove()
 
     return (t_move)-1; // ValueError si la probabilité est 0
 }
+void chooseNineMoves(t_move selected_moves[9])
+{
+    resetProbabilities();
+    for (int i = 0; i < 9; i++) {
+        selected_moves[i] = selectMove();
+    }
+}
 
 void chooseMoves(t_move selected_moves[SEL_MOV]) 
 {
-    resetProbabilities();
-    for (int i = 0; i < SEL_MOV; i++) 
+    t_move nine_moves[9];
+    chooseNineMoves(nine_moves);
+
+    for (int i = 0; i < SEL_MOV; i++)
     {
-        selected_moves[i] = selectMove();
+        selected_moves[i] = nine_moves[i];
     }
 }
 
