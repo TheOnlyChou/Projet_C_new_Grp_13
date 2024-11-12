@@ -6,6 +6,7 @@
 #include "stack.h"
 #include "queue.h"
 #include "map.h"
+#include "n_ary_tree.h"
 
 #include "map.h"
 
@@ -60,6 +61,18 @@ int main() {
     // Afficher les probabilités après mélange
     printf("\nProbabilités après mélange:\n");
     printProbabilities(move_probabilities, NUM_MOV);
-    
+
+    // Créer un arbre n-aire et construire un arbre simple
+    t_node* root = NULL;
+    build_simple_tree(&root);
+    // Afficher la structure de l'arbre pour vérifier la construction
+    printf("Racine: Position (%d, %d), Total Cost: %d\n", root->pos.x, root->pos.y, root->totalCost);
+    for (int i = 0; i < root->numChildren; i++)
+    {
+        printf("Enfant %d: Position (%d, %d), Total Cost: %d, Type de sol: %d\n", i + 1,
+               root->children[i]->pos.x, root->children[i]->pos.y,
+               root->children[i]->totalCost, root->children[i]->soilType);
+    }
+
     return 0;
 }

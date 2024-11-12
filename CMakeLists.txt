@@ -15,4 +15,6 @@ queue.h
 stack.c
 stack.h
 prob_mov.c
-prob_mov.h)
+prob_mov.h
+        n_ary_tree.c
+        n_ary_tree.h)
