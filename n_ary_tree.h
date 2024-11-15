@@ -7,6 +7,7 @@
 
 #include "loc.h" // Récupération de la structure t_position (x, y)
 #include "map.h" // Récupération de la structure t_soil (type de sol)
+#include "queue.h" // Récupération de la structure t_queue (file) pour le parcours en largeur pour chercher la feuille la plus basse
 
 /**
  * @brief Structure pour un noeud d'un arbre n-aire qui se base sur t_position et t_soil
@@ -31,7 +32,7 @@ typedef struct s_nary_tree
     t_node* root;          // Position de départ (Base Station) de l'arbre
 } t_nary_tree;
 
-/*
+/**
  * @brief Initialise un noeud pour un arbre n-aire
  * @param pos : la position du noeud (x,y)
  * @param cost : le coût du mouvement vers ce noeud en fonction du type de sol
@@ -41,14 +42,14 @@ typedef struct s_nary_tree
  */
 t_node *createNode(t_position pos, int cost, t_soil soilType, t_node *parent,int maxChildren);
 
-/*
+/**
  * @brief Ajoute un enfant à un parent
  * @param parent : le parent
  * @param child : l'enfant à ajouter
  */
 void addChild(t_node *parent, t_node *child);
 
-/*
+/**
  * @brief Construit un arbre simple pour tester
  * @param tree : l'arbre à construire
  */

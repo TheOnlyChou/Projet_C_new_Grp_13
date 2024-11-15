@@ -10,7 +10,8 @@
 
 #include "map.h"
 
-int main() {
+int main()
+{
     t_map map = createMapFromFile("..\\maps\\example1.map");
     printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
     for (int i = 0; i < map.y_max; i++)
@@ -65,6 +66,9 @@ int main() {
     // Créer un arbre n-aire et construire un arbre simple
     t_node* root = NULL;
     build_simple_tree(&root);
+
+    printf("\nArbre n-aire construit : \n");
+
     // Afficher la structure de l'arbre pour vérifier la construction
     printf("Racine: Position (%d, %d), Total Cost: %d\n", root->pos.x, root->pos.y, root->totalCost);
     for (int i = 0; i < root->numChildren; i++)

@@ -38,7 +38,7 @@ void build_simple_tree(t_nary_tree* tree)
     root_pos.x = 0;
     root_pos.y = 0;
     tree->root = createNode(root_pos, 0, PLAIN, NULL, 2);
-
+    // Autre manière de l'écrire : (t_position){0, 0}, 0, PLAIN, NULL, 2
     t_position child1_pos;
     child1_pos.x = 0;
     child1_pos.y = 1;
@@ -49,7 +49,7 @@ void build_simple_tree(t_nary_tree* tree)
     child2_pos.y = 0;
     t_node* child2 = createNode(child2_pos, 8, PLAIN, tree->root, 0);
 
-    tree->root->children[tree->root->numChildren++] = child1;
-    tree->root->children[tree->root->numChildren++] = child2;
+    addChild(tree->root, child1);
+    addChild(tree->root, child2);
 }
 

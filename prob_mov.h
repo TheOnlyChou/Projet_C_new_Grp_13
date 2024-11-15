@@ -7,7 +7,6 @@
 #define NUM_MOV 7 // Nombre de mouvements possibles
 #define SEL_MOV 5 // Nombre de mouvements sélectionnés
 
-
 /**
  * @brief Structure : mouvement et probabilité
  */
