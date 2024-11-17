@@ -7,7 +7,6 @@
 #include "queue.h"
 #include "map.h"
 #include "n_ary_tree.h"
-
 #include "map.h"
 
 int main()
@@ -64,18 +63,18 @@ int main()
     printProbabilities(move_probabilities, NUM_MOV);
 
     // Créer un arbre n-aire et construire un arbre simple
-    t_node* root = NULL;
-    build_simple_tree(&root);
+    t_nary_tree tree;
+    build_simple_tree(&tree);
 
     printf("\nArbre n-aire construit : \n");
 
     // Afficher la structure de l'arbre pour vérifier la construction
-    printf("Racine: Position (%d, %d), Total Cost: %d\n", root->pos.x, root->pos.y, root->totalCost);
-    for (int i = 0; i < root->numChildren; i++)
+    printf("Racine: Position (%d, %d), Total Cost: %d\n", tree.root->pos.x, tree.root->pos.y, tree.root->totalCost);
+    for (int i = 0; i < tree.root->numChildren; i++)
     {
         printf("Enfant %d: Position (%d, %d), Total Cost: %d, Type de sol: %d\n", i + 1,
-               root->children[i]->pos.x, root->children[i]->pos.y,
-               root->children[i]->totalCost, root->children[i]->soilType);
+               tree.root->children[i]->pos.x, tree.root->children[i]->pos.y,
+               tree.root->children[i]->totalCost, tree.root->children[i]->soilType);
     }
 
     return 0;
