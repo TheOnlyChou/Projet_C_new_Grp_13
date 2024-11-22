@@ -3,27 +3,14 @@
 
 #include "n_ary_tree.h"
 
-t_node *createNode(t_position pos, int cost, t_soil soilType, t_node *parent,int maxChildren)
+t_node *createNode(t_move_probability move_p, t_soil TypeSoil, int cost_move)
 {
-    t_node *node = malloc(sizeof(t_node));
-
-    node->pos = pos;
-    node->cost = cost;
-    node->soilType = soilType;
-    node->parent = parent;
+    t_node *node = (t_node *)malloc(sizeof(t_node));
+    node->move_probability = move_p;
+    node->TypeSoil = TypeSoil;
+    node->cost_move = cost_move;
     node->numChildren = 0;
-
-    node->children = malloc(maxChildren * sizeof(t_node*));
-
-    if(parent != NULL)
-    {
-        node->totalCost = parent->totalCost + cost;
-    }
-    else
-    {
-        node->totalCost = cost;
-    }
-
+    node->parent = NULL;
     return node;
 }
 
@@ -32,24 +19,39 @@ void addChild(t_node *parent, t_node *child)
     parent->children[parent->numChildren++] = child;
 }
 
-void build_simple_tree(t_nary_tree* tree)
+t_tree createEmptyTree()
 {
-    t_position root_pos;
-    root_pos.x = 0;
-    root_pos.y = 0;
-    tree->root = createNode(root_pos, 0, PLAIN, NULL, 2);
-    // Autre manière de l'écrire : (t_position){0, 0}, 0, PLAIN, NULL, 2
-    t_position child1_pos;
-    child1_pos.x = 0;
-    child1_pos.y = 1;
-    t_node* child1 = createNode(child1_pos, 5, ERG, tree->root, 0);
-
-    t_position child2_pos;
-    child2_pos.x = 1;
-    child2_pos.y = 0;
-    t_node* child2 = createNode(child2_pos, 8, PLAIN, tree->root, 0);
-
-    addChild(tree->root, child1);
-    addChild(tree->root, child2);
+    t_tree tree;
+    tree.root = NULL;
+    return tree;
 }
 
+void freeTree(t_node *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+    for (int i = 0; i < node->numChildren; i++)
+    {
+        freeTree(node->children[i]);
+    }
+    free(node);
+}
+
+void displayNaryTree(t_node *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+    printf("Noeud : %d\n", node->move_probability);
+    printf("Type de sol : %d\n", node->TypeSoil);
+    printf("Coût du mouvement : %d\n", node->cost_move);
+    printf("Nombre d'enfants : %d\n", node->numChildren);
+    for (int i = 0; i < node->numChildren; i++)
+    {
+        displayNaryTree(node->children[i]);
+    }
+    return;
+}

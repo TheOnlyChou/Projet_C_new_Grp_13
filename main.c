@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 #include "loc.h"
 #include "moves.h"
 #include "prob_mov.h"
@@ -7,10 +10,20 @@
 #include "queue.h"
 #include "map.h"
 #include "n_ary_tree.h"
-#include "map.h"
+#include "marc_rover.h"
 
 int main()
 {
+    srand(time(NULL)); // Initialiser la graine du générateur de nombres aléatoires
+
+    t_move selected_moves[SEL_MOV];
+    chooseMoves(selected_moves);
+
+    // Afficher les mouvements sélectionnés
+    for (int i = 0; i < SEL_MOV; i++) {
+        printf("Mouvement %d : %d\n", i, selected_moves[i]);
+    }
+
     t_map map = createMapFromFile("..\\maps\\example1.map");
     printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
     for (int i = 0; i < map.y_max; i++)
@@ -32,50 +45,46 @@ int main()
     }
     displayMap(map);
 
-    // Initialiser les mouvements sélectionnés
-    t_move selected_moves[SEL_MOV];
-
-    // Réinitialiser les probabilités
+    // Initialiser les probabilités de mouvement
     resetProbabilities();
-
-    // Afficher les probabilités initiales
-    printf("Probabilités initiales :\n");
+    printf("\nProbabilités initiales :\n");
     printProbabilities(move_probabilities, NUM_MOV);
 
-    // Choisir les mouvements
+    // Choisir des mouvements et afficher
     chooseMoves(selected_moves);
-
-    // Afficher les mouvements sélectionnés
-    printf("\nMouvements sélectionnés:\n");
+    printf("\nMouvements sélectionnés :\n");
     for (int i = 0; i < SEL_MOV; i++) {
-        printf("Mouvement %d sélectionné\n", selected_moves[i]);
+        printf("\nMouvement %d sélectionné\n", selected_moves[i]);
     }
 
-    // Afficher les probabilités après sélection
-    printf("\nProbabilités après sélection:\n");
-    printProbabilities(move_probabilities, NUM_MOV);
+    // Initialiser la localisation du robot
+    t_localisation loc = { {0, 0}, 0 }; // Position (0,0) et orientation NORTH
 
-    // Appeler la fonction shuffle pour mélanger les probabilités
-    shuffle(move_probabilities, NUM_MOV);
+    // Initialiser le coût total
+    int total_cost = 0;
 
-    // Afficher les probabilités après mélange
-    printf("\nProbabilités après mélange:\n");
-    printProbabilities(move_probabilities, NUM_MOV);
+    // Initialiser les mouvements aléatoires
+    t_move random_moves[9];
+    chooseNineMoves(random_moves);
 
-    // Créer un arbre n-aire et construire un arbre simple
-    t_nary_tree tree;
-    build_simple_tree(&tree);
+    // Initialiser l'arbre n-aire
+    t_tree tree;
+    t_move_probability move_p = {0}; // Example initialization, replace with actual data
+    t_soil TypeSoil = {0}; // Example initialization, replace with actual data
+    int cost_move = 0; // Example initialization, replace with actual data
+    tree.root = createNode(move_p, TypeSoil, cost_move);
 
-    printf("\nArbre n-aire construit : \n");
+    // Créer le robot MARC
+    t_marc_rover marc_rover = createMarcRover(loc, total_cost, random_moves, tree);
 
-    // Afficher la structure de l'arbre pour vérifier la construction
-    printf("Racine: Position (%d, %d), Total Cost: %d\n", tree.root->pos.x, tree.root->pos.y, tree.root->totalCost);
-    for (int i = 0; i < tree.root->numChildren; i++)
-    {
-        printf("Enfant %d: Position (%d, %d), Total Cost: %d, Type de sol: %d\n", i + 1,
-               tree.root->children[i]->pos.x, tree.root->children[i]->pos.y,
-               tree.root->children[i]->totalCost, tree.root->children[i]->soilType);
-    }
+    // Afficher le robot MARC
+    displayMarcRover(marc_rover);
+
+    // Diminuer une action spécifique (par exemple, l'action 0)
+    decreaseActions(&marc_rover, 0);
+
+    // Libérer la mémoire allouée pour le robot MARC
+    freeMarcRover(&marc_rover);
 
     return 0;
 }

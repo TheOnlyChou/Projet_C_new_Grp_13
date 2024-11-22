@@ -10,26 +10,26 @@
 /**
  * @brief Structure : mouvement et probabilité
  */
-typedef struct 
+typedef struct
 {
     t_move move;
     float probability;
 } t_move_probability;
 
 /**
- * @brief Tableau des mouvements et des probabilités (7 mouvements 2 qui se répètent => 9 mouvements) 
+ * @brief Tableau des mouvements et des probabilités (7 mouvements 2 qui se répètent => 9 mouvements)
  * fonctionne comme un dictionnaire en Python
  */
 static t_move_probability move_probabilities[NUM_MOV] =
-{
-    {F_10, 22.0}, //[0]
-    {F_20, 15.0}, //[1]
-    {F_30, 7.0}, //...
-    {B_10, 7.0},
-    {T_LEFT, 21.0},
-    {T_RIGHT, 21.0},
-    {U_TURN, 7.0} //[6]
-};
+        {
+                {F_10, 22.0}, //[0]
+                {F_20, 15.0}, //[1]
+                {F_30, 7.0}, //...
+                {B_10, 7.0},
+                {T_LEFT, 21.0},
+                {T_RIGHT, 21.0},
+                {U_TURN, 7.0} //[6]
+        };
 
 /**
  * @brief Fonction pour réinitialiser les probabilités de base

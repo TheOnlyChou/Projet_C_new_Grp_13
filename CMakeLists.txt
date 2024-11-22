@@ -17,4 +17,7 @@ stack.h
 prob_mov.c
 prob_mov.h
         n_ary_tree.c
-        n_ary_tree.h)
+        n_ary_tree.h
+        marc_rover.c
+        marc_rover.h
+)

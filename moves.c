@@ -136,7 +136,6 @@ t_localisation translate(t_localisation loc, t_move move)
 }
 
 /* definitions of exported functions */
-
 char *getMoveAsString(t_move move)
 {
     return _moves[move];

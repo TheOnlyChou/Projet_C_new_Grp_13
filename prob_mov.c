@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <time.h>
 #include "prob_mov.h"
-
 
 void resetProbabilities()
 {
@@ -15,9 +14,9 @@ void resetProbabilities()
     move_probabilities[6].probability = 7.0;
 }
 
- void shuffle(t_move_probability *array, int n)
+void shuffle(t_move_probability *array, int n)
 {
-    if (n > 1) // O ou 1 éléments pas besoin de mélanger
+    if (n > 1)
     {
         for (int i = 0; i < n; i++)
         {
@@ -32,18 +31,14 @@ void resetProbabilities()
 t_move selectMove()
 {
     shuffle(move_probabilities, NUM_MOV);
-
-    for (int i = 0; i < NUM_MOV; i++)
-    {
+    for (int i = 0; i < NUM_MOV; i++) {
         if (move_probabilities[i].probability > 0)
         {
-            move_probabilities[i].probability *= 0.99; // Diminuer la probabilité du mouvement
-            //Exemple : p_{nouveau}=p×0,99=100×0,99=99
+            move_probabilities[i].probability *= 0.99;
             return move_probabilities[i].move;
         }
     }
-
-    return (t_move)-1; // ValueError si la probabilité est 0
+    return (t_move)-1;
 }
 
 void chooseNineMoves(t_move selected_moves[9])
@@ -55,20 +50,19 @@ void chooseNineMoves(t_move selected_moves[9])
     }
 }
 
-void chooseMoves(t_move selected_moves[SEL_MOV]) 
+void chooseMoves(t_move selected_moves[SEL_MOV])
 {
     t_move nine_moves[9];
     chooseNineMoves(nine_moves);
-
     for (int i = 0; i < SEL_MOV; i++)
     {
-        selected_moves[i] = nine_moves[i];
+        selected_moves[i] = nine_moves[i % 9];
     }
 }
 
-void printProbabilities(t_move_probability *probabilities, int size) 
+void printProbabilities(t_move_probability *probabilities, int size)
 {
-    for (int i = 0; i < size; i++) 
+    for (int i = 0; i < size; i++)
     {
         printf("Mouvement %d: Probabilité = %f\n", i, probabilities[i].probability);
     }
