@@ -15,21 +15,20 @@
  */
 typedef struct s_marc_rover
 {
-    t_localisation  loc; // Localisation du robot MARC
-    int total_cost; // Coût total du parcours
-    t_move_probability choose_Moves[9]; // Tableau des mouvements aléatoires sélectionnés de prob_mov.c et prob_mov.h
-    t_tree tree; // Arbre n-aire pour le robot
+    t_localisation  loc;
+    int total_cost;
+    t_move_probability choose_Moves[SEL_MOV];
+    t_tree tree;
 } t_marc_rover;
 
 /**
  * @brief Fonction pour créer un robot MARC
  * @param loc : la localisation du robot MARC
  * @param total_cost : le coût total du parcours
- * @param choose_Moves : les mouvements aléatoires sélectionnés
  * @param tree : l'arbre n-aire du robot
  * @return le robot créé
  */
-t_marc_rover createMarcRover(t_localisation loc, int total_cost, t_move_probability choose_Moves[9], t_tree tree);
+t_marc_rover createMarcRover(t_localisation loc, int total_cost, t_tree tree);
 
 /**
  * @brief : Fonction pour libérer la mémoire

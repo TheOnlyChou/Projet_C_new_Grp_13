@@ -45,7 +45,7 @@ void displayNaryTree(t_node *node)
     {
         return;
     }
-    printf("Noeud : %d\n", node->move_probability);
+    printf("Noeud : Move = %d, Probability = %f\n", node->move_probability.move, node->move_probability.probability);
     printf("Type de sol : %d\n", node->TypeSoil);
     printf("Coût du mouvement : %d\n", node->cost_move);
     printf("Nombre d'enfants : %d\n", node->numChildren);
@@ -53,5 +53,4 @@ void displayNaryTree(t_node *node)
     {
         displayNaryTree(node->children[i]);
     }
-    return;
 }

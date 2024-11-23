@@ -1,4 +1,3 @@
-// TheOnlyChou partie déplacement en fonction des probabilités
 #ifndef PROB_MOV_H
 #define PROB_MOV_H
 
@@ -20,15 +19,16 @@ typedef struct
  * @brief Tableau des mouvements et des probabilités (7 mouvements 2 qui se répètent => 9 mouvements)
  * fonctionne comme un dictionnaire en Python
  */
+// Conversion de double en float pour éviter les warnings
 static t_move_probability move_probabilities[NUM_MOV] =
         {
-                {F_10, 22.0}, //[0]
-                {F_20, 15.0}, //[1]
-                {F_30, 7.0}, //...
-                {B_10, 7.0},
-                {T_LEFT, 21.0},
-                {T_RIGHT, 21.0},
-                {U_TURN, 7.0} //[6]
+                {F_10, 22.0f}, //[0]
+                {F_20, 15.0f}, //[1]
+                {F_30, 7.0f}, //...
+                {B_10, 7.0f},
+                {T_LEFT, 21.0f},
+                {T_RIGHT, 21.0f},
+                {U_TURN, 7.0f} //[6]
         };
 
 /**

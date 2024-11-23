@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+
 #include "prob_mov.h"
 
 void resetProbabilities()
 {
-    move_probabilities[0].probability = 22.0;
-    move_probabilities[1].probability = 15.0;
-    move_probabilities[2].probability = 7.0;
-    move_probabilities[3].probability = 7.0;
-    move_probabilities[4].probability = 21.0;
-    move_probabilities[5].probability = 21.0;
-    move_probabilities[6].probability = 7.0;
+    move_probabilities[0].probability = 22.0f;
+    move_probabilities[1].probability = 15.0f;
+    move_probabilities[2].probability = 7.0f;
+    move_probabilities[3].probability = 7.0f;
+    move_probabilities[4].probability = 21.0f;
+    move_probabilities[5].probability = 21.0f;
+    move_probabilities[6].probability = 7.0f;
 }
 
 void shuffle(t_move_probability *array, int n)
@@ -31,10 +31,11 @@ void shuffle(t_move_probability *array, int n)
 t_move selectMove()
 {
     shuffle(move_probabilities, NUM_MOV);
-    for (int i = 0; i < NUM_MOV; i++) {
+    for (int i = 0; i < NUM_MOV; i++)
+    {
         if (move_probabilities[i].probability > 0)
         {
-            move_probabilities[i].probability *= 0.99;
+            move_probabilities[i].probability *= 0.99f; //Conversion de double en float pour éviter les warnings
             return move_probabilities[i].move;
         }
     }
