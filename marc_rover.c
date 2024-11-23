@@ -112,8 +112,11 @@ void createTree(t_map *map, t_tree *tree, t_marc_rover *rover)
             continue;
         }
 
+        // Nombre de mouvements disponibles, ajusté pour le terrain REG
+        int num_moves = SEL_MOV;
+
         // Parcours des mouvements possibles
-        for (int i = 0; i < SEL_MOV; i++)
+        for (int i = 0; i < num_moves; i++)
         {
             t_localisation new_pos = move(rover->loc, rover->choose_Moves[i].move);
 
@@ -124,25 +127,28 @@ void createTree(t_map *map, t_tree *tree, t_marc_rover *rover)
                 int new_cost = map->costs[new_pos.pos.y][new_pos.pos.x] + _soil_cost[soil];
 
                 // Gestion des terrains spéciaux
-                if (soil == REG)
-                {
-                    // Terrain REG : Limitation des mouvements à 4 pour la phase suivante
-                    rover->choose_Moves[SEL_MOV - 1].move = (t_move)-1; // Remplace le dernier mouvement par un invalide
-                    rover->choose_Moves[SEL_MOV - 1].probability = 0.0f;
-                } else if (soil == ERG)
+                if (soil == ERG)
                 {
                     // Terrain ERG : Réduction de l'efficacité des mouvements (ajuster le coût)
                     if (rover->choose_Moves[i].move == F_10 || rover->choose_Moves[i].move == B_10)
                     {
                         new_cost += 1; // Mouvement inefficace sur ERG
-                    } else if (rover->choose_Moves[i].move == F_20)
+                    }
+                    else if (rover->choose_Moves[i].move == F_20)
                     {
                         new_cost += 2;
-                    } else if (rover->choose_Moves[i].move == F_30)
+                    }
+                    else if (rover->choose_Moves[i].move == F_30)
                     {
                         new_cost += 3;
                     }
-                } else if (soil == CREVASSE)
+                }
+                else if (soil == REG)
+                {
+                    // Terrain REG : Limiter les mouvements à 4 pour la phase suivante
+                    num_moves = SEL_MOV - 1; // Réduire le nombre de mouvements disponibles
+                }
+                else if (soil == CREVASSE)
                 {
                     new_cost = COST_UNDEF; // Crévasse : mouvement impossible
                 }
@@ -167,6 +173,7 @@ void createTree(t_map *map, t_tree *tree, t_marc_rover *rover)
         }
     }
 }
+
 
 t_node *findMinLeaf(t_tree *tree)
 {
@@ -208,3 +215,4 @@ t_node *findMinLeaf(t_tree *tree)
 
     return min_leaf;
 }
+
