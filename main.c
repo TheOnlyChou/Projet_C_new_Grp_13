@@ -15,9 +15,19 @@ int main()
 {
     srand(time(NULL));
 
-    // Initialiser et afficher la carte
-    t_map map = createMapFromFile("..\\maps\\example1.map");
+    // Chargement de la carte avec gestion des chemins Windows/Linux
+    t_map map;
+
+    // Vérification du système pour le chemin d'accès au fichier
+#if defined(_WIN32) || defined(_WIN64)
+    map = createMapFromFile("..\\maps\\example1.map");
+#else
+    map = createMapFromFile("../maps/example1.map");
+#endif
+
     printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
+
+    // Affichage des types de sols de la carte
     for (int i = 0; i < map.y_max; i++)
     {
         for (int j = 0; j < map.x_max; j++)
@@ -26,9 +36,8 @@ int main()
         }
         printf("\n");
     }
-    printf("\n");
 
-    // Afficher les coûts alignés à gauche sur 5 chiffres
+    // Affichage des coûts de déplacement, alignés à gauche
     for (int i = 0; i < map.y_max; i++)
     {
         for (int j = 0; j < map.x_max; j++)
@@ -37,58 +46,70 @@ int main()
         }
         printf("\n");
     }
+
+    // Affichage graphique de la carte
     displayMap(map);
     printf("\n");
 
-    // Initialiser les probabilités de mouvement et les afficher
+    // Initialisation des probabilités de mouvement
     resetProbabilities();
-    printf("\nProbabilités initiales :\n");
+    printf("Probabilités initiales :\n");
     printProbabilities(move_probabilities, NUM_MOV);
-    printf("\n"); // Saut de ligne pour séparer les sections
+    printf("\n");
 
-    // Choisir des mouvements et les afficher
+    // Sélection et affichage des mouvements
     t_move selected_moves[SEL_MOV];
     chooseMoves(selected_moves);
-    printf("\nMouvements sélectionnés :\n");
+    printf("Mouvements sélectionnés :\n");
     for (int i = 0; i < SEL_MOV; i++)
     {
-        printf("Mouvement %d : %d\n", i, selected_moves[i]);
+        printf("Mouvement %d : %s\n", i, getMoveAsString(selected_moves[i]));
     }
     printf("\n");
 
-    // Initialiser la localisation du robot
-    t_localisation loc = { {0, 0}, 0 }; // Position (0,0) et orientation NORTH
+    // Initialisation du rover MARC
+    t_localisation start_loc = loc_init(0, 0, NORTH); // Départ en (0,0), orienté Nord
+    t_tree move_tree = createEmptyTree();
+    t_marc_rover marc_rover = createMarcRover(start_loc, 0, move_tree);
+    printf("Rover MARC initialisé.\n");
 
-    // Initialiser le coût total
-    int total_cost = 0;
+    // Simulation d'une phase de déplacement avec l'arbre N-aire
+    printf("\nSimuler une phase de déplacement avec arbre N-aire :\n");
+    createTree(&map, &move_tree, &marc_rover);
 
-    // Initialiser les mouvements aléatoires
-    t_move random_moves[9];
-    chooseNineMoves(random_moves);
-
-    // Initialiser l'arbre n-aire
-    t_tree tree;
-    t_move_probability move_p = {0}; // Exemple d'initialisation, remplacer par les données réelles
-    t_soil TypeSoil = {0}; // Exemple d'initialisation, remplacer par les données réelles
-    int cost_move = 0; // Exemple d'initialisation, remplacer par les données réelles
-    tree.root = createNode(move_p, TypeSoil, cost_move);
-
-    // Créer le robot MARC
-    t_marc_rover marc_rover = createMarcRover(loc, total_cost, tree);
-
-    // Appeler la fonction createTree
-    createTree(&map, &tree, &marc_rover);
-
-    // Afficher le robot MARC
+    // Affichage des informations du rover après création de l'arbre
     displayMarcRover(marc_rover);
-    printf("\n");
 
-    // Diminuer une action spécifique
-    decreaseActions(&marc_rover, 0);
-    printf("\n");
+    // Tester les terrains spéciaux (ERG, REG, CREVASSE)
+    printf("\nTester les terrains spéciaux :\n");
+    t_localisation test_loc = loc_init(1, 1, NORTH); // Emplacement fictif pour test
+    marc_rover.loc = test_loc;
 
-    // Libérer la mémoire allouée pour le robot MARC
+    t_soil test_soil = map.soils[marc_rover.loc.pos.y][marc_rover.loc.pos.x];
+    printf("Terrain actuel : %d\n", test_soil);
+
+    if (test_soil == REG)
+    {
+        printf("Terrain REG détecté. Réduction à 4 mouvements disponibles.\n");
+        createTree(&map, &move_tree, &marc_rover);
+    }
+    else if (test_soil == ERG)
+    {
+        printf("Terrain ERG détecté. Ajustement des coûts de déplacement.\n");
+        createTree(&map, &move_tree, &marc_rover);
+    }
+    else if (test_soil == CREVASSE)
+    {
+        printf("Attention : terrain CREVASSE détecté. Mouvement impossible !\n");
+    }
+
+    // Afficher à nouveau le rover après interaction avec terrains spéciaux
+    displayMarcRover(marc_rover);
+
+    // Libération des ressources
+    printf("\nLibération des ressources...\n");
     freeMarcRover(&marc_rover);
+    printf("Terminé.\n");
 
     return 0;
 }
