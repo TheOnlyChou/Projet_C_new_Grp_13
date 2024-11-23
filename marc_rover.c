@@ -93,7 +93,7 @@ void createTree(t_map *map, t_tree *tree, t_marc_rover *rover)
 
     // Création d'une pile pour gérer les nœuds à traiter
     t_stack stack = createStack(100);
-    push(&stack, (int)root);
+    push(&stack, root);
 
     while (stack.nbElts > 0)
     {
@@ -161,7 +161,7 @@ void createTree(t_map *map, t_tree *tree, t_marc_rover *rover)
                 // Ajout de l'enfant dans la pile pour exploration
                 if (new_cost < COST_UNDEF)
                 {
-                    push(&stack, (int)child);
+                    push(&stack, child);
                 }
             }
         }
@@ -180,7 +180,7 @@ t_node *findMinLeaf(t_tree *tree)
 
     // Création d'une pile pour parcourir l'arbre en largeur
     t_stack stack = createStack(100);
-    push(&stack, (int)tree->root);
+    push(&stack, tree->root);
 
     while (stack.nbElts > 0)
     {
@@ -199,7 +199,7 @@ t_node *findMinLeaf(t_tree *tree)
         // Ajouter les enfants à la pile pour exploration
         for (int i = 0; i < current->numChildren; i++)
         {
-            push(&stack, (int)current->children[i]);
+            push(&stack, current->children[i]);
         }
     }
 

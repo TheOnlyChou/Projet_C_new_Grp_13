@@ -1,8 +1,4 @@
-//
-// Created by flasque on 19/10/2024.
-//
-
-#include <malloc.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "stack.h"
 
@@ -18,7 +14,7 @@ t_stack createStack(int size)
     t_stack stack;
     stack.size = size;
     stack.nbElts = 0;
-    stack.values = (int *)malloc(size * sizeof(int));
+    stack.values = (void **)malloc(size * sizeof(void *));
     return stack;
 }
 
@@ -28,7 +24,7 @@ t_stack createStack(int size)
  * @param value : the value to push
  * @return none
  */
-void push(t_stack *p_stack, int value)
+void push(t_stack *p_stack, void *value)
 {
     // the stack must not be full
     assert(p_stack->nbElts < p_stack->size);
@@ -42,7 +38,7 @@ void push(t_stack *p_stack, int value)
  * @param stack : the stack
  * @return the value popped
  */
-int pop(t_stack *p_stack)
+void *pop(t_stack *p_stack)
 {
     // the stack must not be empty
     assert(p_stack->nbElts > 0);
@@ -55,7 +51,7 @@ int pop(t_stack *p_stack)
  * @param stack : the stack
  * @return the top value
  */
-int top(t_stack stack)
+void *top(t_stack stack)
 {
     // the stack must not be empty
     assert(stack.nbElts > 0);
