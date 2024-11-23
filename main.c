@@ -13,7 +13,7 @@
 
 int main()
 {
-    srand(time(NULL)); // Initialiser la graine du générateur de nombres aléatoires
+    srand(time(NULL));
 
     // Initialiser et afficher la carte
     t_map map = createMapFromFile("..\\maps\\example1.map");
@@ -26,7 +26,7 @@ int main()
         }
         printf("\n");
     }
-    printf("\n"); // Saut de ligne pour séparer les sections
+    printf("\n");
 
     // Afficher les coûts alignés à gauche sur 5 chiffres
     for (int i = 0; i < map.y_max; i++)
@@ -38,13 +38,13 @@ int main()
         printf("\n");
     }
     displayMap(map);
-    printf("\n"); // Saut de ligne pour séparer les sections
+    printf("\n");
 
     // Initialiser les probabilités de mouvement et les afficher
     resetProbabilities();
     printf("\nProbabilités initiales :\n");
     printProbabilities(move_probabilities, NUM_MOV);
-    printf("\n");
+    printf("\n"); // Saut de ligne pour séparer les sections
 
     // Choisir des mouvements et les afficher
     t_move selected_moves[SEL_MOV];
@@ -76,11 +76,14 @@ int main()
     // Créer le robot MARC
     t_marc_rover marc_rover = createMarcRover(loc, total_cost, tree);
 
+    // Appeler la fonction createTree
+    createTree(&map, &tree, &marc_rover);
+
     // Afficher le robot MARC
     displayMarcRover(marc_rover);
     printf("\n");
 
-    // Diminuer une action spécifique (par exemple, l'action 0)
+    // Diminuer une action spécifique
     decreaseActions(&marc_rover, 0);
     printf("\n");
 

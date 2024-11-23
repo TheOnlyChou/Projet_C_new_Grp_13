@@ -2,6 +2,8 @@
 // Created by alex8 on 22/11/2024.
 //
 #include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
 
 #include "marc_rover.h"
 
@@ -77,4 +79,132 @@ void decreaseActions(t_marc_rover *marc_rover, int action)
     }
 
     printProbabilities(move_probabilities, NUM_MOV);
+}
+
+void createTree(t_map *map, t_tree *tree, t_marc_rover *rover)
+{
+    // Initialisation de la racine de l'arbre avec la position actuelle du rover
+    t_node *root = createNode(
+            rover->choose_Moves[0],
+            map->soils[rover->loc.pos.y][rover->loc.pos.x],
+            map->costs[rover->loc.pos.y][rover->loc.pos.x]
+    );
+    tree->root = root;
+
+    // Création d'une pile pour gérer les nœuds à traiter
+    t_stack stack = createStack(100);
+    push(&stack, (int)root);
+
+    while (stack.nbElts > 0)
+    {
+        t_node *current_node = (t_node *)pop(&stack);
+
+        // Vérification de la profondeur pour limiter à 5 mouvements
+        int current_depth = 0;
+        t_node *temp = current_node;
+        while (temp != NULL)
+        {
+            current_depth++;
+            temp = temp->parent;
+        }
+        if (current_depth >= 5)
+        {
+            continue;
+        }
+
+        // Parcours des mouvements possibles
+        for (int i = 0; i < SEL_MOV; i++)
+        {
+            t_localisation new_pos = move(rover->loc, rover->choose_Moves[i].move);
+
+            // Vérification de validité de la nouvelle position
+            if (isValidLocalisation(new_pos.pos, map->x_max, map->y_max))
+            {
+                t_soil soil = map->soils[new_pos.pos.y][new_pos.pos.x];
+                int new_cost = map->costs[new_pos.pos.y][new_pos.pos.x] + _soil_cost[soil];
+
+                // Gestion des terrains spéciaux
+                if (soil == REG)
+                {
+                    // Terrain REG : Limitation des mouvements à 4 pour la phase suivante
+                    rover->choose_Moves[SEL_MOV - 1].move = (t_move)-1; // Remplace le dernier mouvement par un invalide
+                    rover->choose_Moves[SEL_MOV - 1].probability = 0.0f;
+                } else if (soil == ERG)
+                {
+                    // Terrain ERG : Réduction de l'efficacité des mouvements (ajuster le coût)
+                    if (rover->choose_Moves[i].move == F_10 || rover->choose_Moves[i].move == B_10)
+                    {
+                        new_cost += 1; // Mouvement inefficace sur ERG
+                    } else if (rover->choose_Moves[i].move == F_20)
+                    {
+                        new_cost += 2;
+                    } else if (rover->choose_Moves[i].move == F_30)
+                    {
+                        new_cost += 3;
+                    }
+                } else if (soil == CREVASSE)
+                {
+                    new_cost = COST_UNDEF; // Crévasse : mouvement impossible
+                }
+
+                // Création du nœud enfant
+                t_node *child = createNode(rover->choose_Moves[i], soil, new_cost);
+                child->parent = current_node;
+                addChild(current_node, child);
+
+                // Arrêt précoce si la station de base est atteinte
+                if (new_cost == 0)
+                {
+                    return;
+                }
+
+                // Ajout de l'enfant dans la pile pour exploration
+                if (new_cost < COST_UNDEF)
+                {
+                    push(&stack, (int)child);
+                }
+            }
+        }
+    }
+}
+
+t_node *findMinLeaf(t_tree *tree)
+{
+    if (tree == NULL || tree->root == NULL)
+    {
+        return NULL; // Aucun nœud dans l'arbre
+    }
+
+    t_node *min_leaf = NULL;
+    int min_cost = INT_MAX;
+
+    // Création d'une pile pour parcourir l'arbre en largeur
+    t_stack stack = createStack(100);
+    push(&stack, (int)tree->root);
+
+    while (stack.nbElts > 0)
+    {
+        t_node *current = (t_node *)pop(&stack);
+
+        // Vérification si le nœud est une feuille
+        if (current->numChildren == 0)
+        {
+            if (current->cost_move < min_cost)
+            {
+                min_cost = current->cost_move;
+                min_leaf = current;
+            }
+        }
+
+        // Ajouter les enfants à la pile pour exploration
+        for (int i = 0; i < current->numChildren; i++)
+        {
+            push(&stack, (int)current->children[i]);
+        }
+    }
+
+    // Libération de la mémoire de la pile
+    free(stack.values);
+
+    return min_leaf;
 }

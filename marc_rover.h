@@ -49,5 +49,19 @@ void displayMarcRover(t_marc_rover marc_rover);
  */
 void decreaseActions(t_marc_rover *marc_rover, int action);
 
+/**
+ * @brief Fonction pour créer l'arbre n-aire du robot MARC
+ * @param map : la carte
+ * @param tree : l'arbre n-aire
+ * @param rover : le robot MARC
+ */
+void createTree(t_map *map, t_tree *tree, t_marc_rover *rover);
+
+/**
+ * @brief Fonction pour trouver la feuille avec le coût minimal
+ * @param tree : l'arbre n-aire
+ * @return la feuille avec le coût minimal
+ */
+t_node *findMinLeaf(t_tree *tree);
 
 #endif //MARC_ROVER_H
