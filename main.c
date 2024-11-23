@@ -106,6 +106,37 @@ int main()
     // Afficher à nouveau le rover après interaction avec terrains spéciaux
     displayMarcRover(marc_rover);
 
+    // Utilisation des nouvelles fonctions
+    printf("\nUtilisation des nouvelles fonctions :\n");
+
+    // Trouver la feuille avec le coût minimal
+    t_node *min_leaf = findMinLeaf(&move_tree);
+    if (min_leaf != NULL)
+    {
+        printf("Feuille avec le coût minimal trouvée.\n");
+
+        // Générer le chemin à partir de la feuille trouvée
+        int pathLength, totalCost;
+        int *path = generatePath(min_leaf, &pathLength, &totalCost);
+        printf("Chemin généré avec longueur %d et coût total %d.\n", pathLength, totalCost);
+
+        // Afficher la carte avec la position du rover
+        renderMap(&map, marc_rover.loc.pos);
+
+        // Diriger le rover en évitant le chemin
+        directRover(&marc_rover, path, pathLength);
+
+        // Suivre le chemin généré
+        followPath(&map, &marc_rover, path, pathLength);
+
+        // Libérer la mémoire du chemin
+        free(path);
+    }
+    else
+    {
+        printf("Aucune feuille trouvée avec un coût minimal.\n");
+    }
+
     // Libération des ressources
     printf("\nLibération des ressources...\n");
     freeMarcRover(&marc_rover);

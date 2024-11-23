@@ -64,4 +64,47 @@ void createTree(t_map *map, t_tree *tree, t_marc_rover *rover);
  */
 t_node *findMinLeaf(t_tree *tree);
 
+/**
+ * @brief Fonction pour générer le chemin à partir d'une feuille
+ * @param target : la feuille cible
+ * @param pathLength : la longueur du chemin
+ * @param totalCost : le coût total du chemin
+ * @return le chemin généré
+ */
+t_localisation applyMove(t_localisation loc, t_move move);
+
+/**
+ * @brief Fonction pour générer le chemin à partir d'une feuille
+ * @param target : la feuille cible
+ * @param pathLength : la longueur du chemin
+ * @param totalCost : le coût total du chemin
+ * @return le chemin généré
+ */
+int* generatePath(t_node* target, int* pathLength, int* totalCost);
+
+/**
+ * @brief Fonction pour afficher la carte
+ * @param map : la carte
+ * @param roverPosition : la position du rover
+ */
+void renderMap(t_map* map, t_position roverPosition);
+
+/**
+ * @brief Fonction pour éviter un rover
+ * @param rover : le rover MARC
+ * @param path : le chemin à éviter
+ * @param pathLength : la longueur du chemin
+ */
+void directRover(t_marc_rover* rover, const int* path, int pathLength);
+
+/**
+ * @brief Fonction pour suivre un chemin
+ * @param map : la carte
+ * @param rover : le rover MARC
+ * @param path : le chemin à suivre
+ * @param pathLength : la longueur du chemin
+ */
+void followPath(t_map* map, t_marc_rover* rover, const int* path, int pathLength);
+
+
 #endif //MARC_ROVER_H

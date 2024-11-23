@@ -4,8 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <string.h>
 
 #include "marc_rover.h"
+#include "moves.h"
 
 t_marc_rover createMarcRover(t_localisation loc, int total_cost, t_tree tree)
 {
@@ -174,7 +176,6 @@ void createTree(t_map *map, t_tree *tree, t_marc_rover *rover)
     }
 }
 
-
 t_node *findMinLeaf(t_tree *tree)
 {
     if (tree == NULL || tree->root == NULL)
@@ -215,4 +216,140 @@ t_node *findMinLeaf(t_tree *tree)
 
     return min_leaf;
 }
+
+t_localisation applyMove(t_localisation loc, t_move move)
+{
+    t_localisation new_loc = loc;
+    switch (move)
+    {
+        case F_10:
+            if (loc.ori == NORTH) new_loc.pos.y -= 1;
+            else if (loc.ori == SOUTH) new_loc.pos.y += 1;
+            else if (loc.ori == EAST) new_loc.pos.x += 1;
+            else if (loc.ori == WEST) new_loc.pos.x -= 1;
+            break;
+        case F_20:
+            if (loc.ori == NORTH) new_loc.pos.y -= 2;
+            else if (loc.ori == SOUTH) new_loc.pos.y += 2;
+            else if (loc.ori == EAST) new_loc.pos.x += 2;
+            else if (loc.ori == WEST) new_loc.pos.x -= 2;
+            break;
+        case T_LEFT:
+            new_loc.ori = (loc.ori + 3) % 4;
+            break;
+        case T_RIGHT:
+            new_loc.ori = (loc.ori + 1) % 4;
+            break;
+        case U_TURN:
+            new_loc.ori = (loc.ori + 2) % 4;
+            break;
+        default:
+            printf("Mouvement inconnu : %d\n", move);
+            break;
+    }
+    return new_loc;
+}
+
+void renderMap(t_map* map, t_position roverPosition)
+{
+    for (int i = 0; i < map->y_max; i++)
+    {
+        for (int rep = 0; rep < 3; rep++)
+        {
+            for (int j = 0; j < map->x_max; j++)
+            {
+                char c[4];
+                if (i == roverPosition.y && j == roverPosition.x)
+                {
+                    strcpy(c, " R ");
+                } else
+                {
+                    switch (map->soils[i][j])
+                    {
+                        case 0: strcpy(c, " B "); break;
+                        case 1: strcpy(c, "---"); break;
+                        case 2: strcpy(c, "~~~"); break;
+                        case 3: strcpy(c, "^^^"); break;
+                        case 4: sprintf(c, "%c%c%c", 219, 219, 219); break;
+                        default: strcpy(c, "???"); break;
+                    }
+                }
+                printf("%s", c);
+            }
+            printf("\n");
+        }
+    }
+}
+
+int* generatePath(t_node* target, int* pathLength, int* totalCost)
+{
+    if (!target)
+    {
+        printf("Erreur : noeud cible invalide.\n");
+        return NULL;
+    }
+
+    t_node* current = target;
+    int steps = 0;
+
+    while (current->parent)
+    {
+        steps++;
+        current = current->parent;
+    }
+
+    int* path = malloc(steps * sizeof(int));
+    if (!path)
+    {
+        printf("Erreur : allocation mémoire échouée.\n");
+        return NULL;
+    }
+
+    current = target;
+    *totalCost = 0;
+    for (int i = steps - 1; i >= 0; i--)
+    {
+        path[i] = current->move_probability.move;
+        *totalCost += current->cost_move;
+        current = current->parent;
+    }
+
+    *pathLength = steps;
+    return path;
+}
+
+void directRover(t_marc_rover* rover, const int* path, int pathLength)
+{
+    printf("Debut de la navigation. Position initiale : (%d, %d)\n",rover->loc.pos.x, rover->loc.pos.y);
+
+    for (int step = 0; step < pathLength; step++)
+    {
+        t_move move = (t_move)path[step];
+        rover->loc = applyMove(rover->loc, move);
+
+        printf("Etape %d : Position actuelle : (%d, %d), Orientation : %d\n",step + 1, rover->loc.pos.x, rover->loc.pos.y, rover->loc.ori);
+    }
+
+    printf("Navigation terminee. Position finale : (%d, %d)\n",rover->loc.pos.x, rover->loc.pos.y);
+}
+
+void followPath(t_map* map, t_marc_rover* rover, const int* path, int pathLength)
+{
+    printf("Position initiale du rover :\n");
+    renderMap(map, rover->loc.pos);
+    printf("\n");
+
+    for (int step = 0; step < pathLength; step++)
+    {
+        t_move move = (t_move)path[step];
+        rover->loc = applyMove(rover->loc, move);
+
+        printf("Etape %d :\n", step + 1);
+        renderMap(map, rover->loc.pos);
+        printf("\n");
+    }
+
+    printf("Position finale atteinte : (%d, %d)\n", rover->loc.pos.x, rover->loc.pos.y);
+}
+
 
