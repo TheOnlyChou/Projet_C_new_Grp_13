@@ -53,14 +53,14 @@ int main()
 
     // Initialisation des probabilités de mouvement
     resetProbabilities();
-    printf("Probabilités initiales :\n");
+    printf("Probabilites initiales :\n");
     printProbabilities(move_probabilities, NUM_MOV);
     printf("\n");
 
     // Sélection et affichage des mouvements
     t_move selected_moves[SEL_MOV];
     chooseMoves(selected_moves);
-    printf("Mouvements sélectionnés :\n");
+    printf("Mouvements selectionnes :\n");
     for (int i = 0; i < SEL_MOV; i++)
     {
         printf("Mouvement %d : %s\n", i, getMoveAsString(selected_moves[i]));
@@ -74,14 +74,14 @@ int main()
     printf("Rover MARC initialisé.\n");
 
     // Simulation d'une phase de déplacement avec l'arbre N-aire
-    printf("\nSimuler une phase de déplacement avec arbre N-aire :\n");
+    printf("\nSimuler une phase de deplacement avec arbre N-aire :\n");
     createTree(&map, &move_tree, &marc_rover);
 
     // Affichage des informations du rover après création de l'arbre
     displayMarcRover(marc_rover);
 
     // Tester les terrains spéciaux (ERG, REG, CREVASSE)
-    printf("\nTester les terrains spéciaux :\n");
+    printf("\nTester les terrains speciaux :\n");
     t_localisation test_loc = loc_init(1, 1, NORTH); // Emplacement fictif pour test
     marc_rover.loc = test_loc;
 
@@ -90,17 +90,17 @@ int main()
 
     if (test_soil == REG)
     {
-        printf("Terrain REG détecté. Réduction à 4 mouvements disponibles.\n");
+        printf("Terrain REG détecte. Reduction à 4 mouvements disponibles.\n");
         createTree(&map, &move_tree, &marc_rover);
     }
     else if (test_soil == ERG)
     {
-        printf("Terrain ERG détecté. Ajustement des coûts de déplacement.\n");
+        printf("Terrain ERG détecté. Ajustement des coûts de deplacement.\n");
         createTree(&map, &move_tree, &marc_rover);
     }
     else if (test_soil == CREVASSE)
     {
-        printf("Attention : terrain CREVASSE détecté. Mouvement impossible !\n");
+        printf("Attention : terrain CREVASSE detecte. Mouvement impossible !\n");
     }
 
     // Afficher à nouveau le rover après interaction avec terrains spéciaux
@@ -113,12 +113,12 @@ int main()
     t_node *min_leaf = findMinLeaf(&move_tree);
     if (min_leaf != NULL)
     {
-        printf("Feuille avec le coût minimal trouvée.\n");
+        printf("Feuille avec le cout minimal trouvee.\n");
 
         // Générer le chemin à partir de la feuille trouvée
         int pathLength, totalCost;
         int *path = generatePath(min_leaf, &pathLength, &totalCost);
-        printf("Chemin généré avec longueur %d et coût total %d.\n", pathLength, totalCost);
+        printf("Chemin genere avec longueur %d et cout total %d.\n", pathLength, totalCost);
 
         // Afficher la carte avec la position du rover
         renderMap(&map, marc_rover.loc.pos);
@@ -134,13 +134,13 @@ int main()
     }
     else
     {
-        printf("Aucune feuille trouvée avec un coût minimal.\n");
+        printf("Aucune feuille trouvee avec un coût minimal.\n");
     }
 
     // Libération des ressources
-    printf("\nLibération des ressources...\n");
+    printf("\nLiberation des ressources...\n");
     freeMarcRover(&marc_rover);
-    printf("Terminé.\n");
+    printf("Termine.\n");
 
     return 0;
 }
