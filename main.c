@@ -71,7 +71,7 @@ int main()
     t_localisation start_loc = loc_init(0, 0, NORTH); // Départ en (0,0), orienté Nord
     t_tree move_tree = createEmptyTree();
     t_marc_rover marc_rover = createMarcRover(start_loc, 0, move_tree);
-    printf("Rover MARC initialisé.\n");
+    printf("Rover MARC initialise.\n");
 
     // Simulation d'une phase de déplacement avec l'arbre N-aire
     printf("\nSimuler une phase de deplacement avec arbre N-aire :\n");
@@ -95,7 +95,7 @@ int main()
     }
     else if (test_soil == ERG)
     {
-        printf("Terrain ERG détecté. Ajustement des coûts de deplacement.\n");
+        printf("Terrain ERG détecte. Ajustement des couts de deplacement.\n");
         createTree(&map, &move_tree, &marc_rover);
     }
     else if (test_soil == CREVASSE)
@@ -134,7 +134,7 @@ int main()
     }
     else
     {
-        printf("Aucune feuille trouvee avec un coût minimal.\n");
+        printf("Aucune feuille trouvee avec un cout minimal.\n");
     }
 
     // Libération des ressources
