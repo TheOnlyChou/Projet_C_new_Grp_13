@@ -45,3 +45,21 @@ Affiche les informations du robot MARC, y compris la localisation, le coût tota
 
 Fonction decreaseActions :
 Diminue les actions possibles du robot MARC, en sélectionnant un nouveau mouvement aléatoire lorsque nécessaire.
+
+Fonction findMinLeaf :
+Trouve le nœud feuille avec le coût minimal dans l'arbre.
+
+Fonction generatePath :
+Génère un chemin à partir du nœud feuille trouvé, renvoyant la longueur du chemin et le coût total.
+
+Fonction renderMap :
+Affiche la carte avec la position actuelle du rover.
+
+Fonction directRover :
+Dirige le rover tout en évitant le chemin généré.
+
+Fonction followPath :
+Fait suivre le chemin généré par le rover.
+
+Fonction free :
+Libère la mémoire allouée pour le chemin.
